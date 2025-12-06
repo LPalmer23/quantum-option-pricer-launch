@@ -1,3 +1,6 @@
+
+<img width="549" height="205" alt="Screenshot 2025-12-06 at 8 29 54 PM" src="https://github.com/user-attachments/assets/772b8554-b2b4-4778-93e4-f4d715835e6f" />
+
 ## Overview
 
 This project demonstrates a practical workflow for quantum-inspired option pricing.  
