@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import "./App.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
 type ChatMessage = {
   role: "user" | "assistant";
   content: string;
@@ -42,11 +45,14 @@ export default function AgentChat() {
     setError(null);
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/assistant", {
+        const API_URL = import.meta.env.VITE_API_URL;
+
+        const res = await fetch(`${API_URL}/assistant`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: newMessage.content }),
-      });
+        });
+
 
       if (!res.ok) {
         const text = await res.text();
