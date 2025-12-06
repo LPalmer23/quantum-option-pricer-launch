@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
 
-const API_URL = import.meta.env.VITE_API_URL;
-
-
 type ChatMessage = {
   role: "user" | "assistant";
   content: string;
@@ -25,7 +22,7 @@ export default function AgentChat() {
   // 🔥 NEW: one-time bounce state
   const [shouldBounce, setShouldBounce] = useState(false);
 
-  // 🔥 NEW: start bounce after delay (no bounce during loading animation)
+  // 🔥 NEW: start bounce after delay
   React.useEffect(() => {
     const timer = setTimeout(() => {
       setShouldBounce(true);
@@ -45,14 +42,14 @@ export default function AgentChat() {
     setError(null);
 
     try {
-        const API_URL = import.meta.env.VITE_API_URL;
+      // ✅ USE YOUR ENV VARIABLE (THIS IS WHAT YOU CHANGE)
+      const API_URL = import.meta.env.VITE_API_URL;
 
-        const res = await fetch(`${API_URL}/assistant`, {
+      const res = await fetch(`${API_URL}/assistant`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: newMessage.content }),
-        });
-
+      });
 
       if (!res.ok) {
         const text = await res.text();
@@ -74,7 +71,6 @@ export default function AgentChat() {
 
   return (
     <>
-      {/* Toggle button with bounce */}
       <button
         className={`agent-toggle ${shouldBounce ? "agent-button-bounce-once" : ""}`}
         type="button"
