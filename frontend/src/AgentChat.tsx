@@ -42,8 +42,9 @@ export default function AgentChat() {
     setError(null);
 
     try {
-      // ✅ USE YOUR ENV VARIABLE (THIS IS WHAT YOU CHANGE)
-      const API_URL = import.meta.env.VITE_API_URL;
+  
+      const API_URL = "https://quantum-option-pricer-launch.onrender.com";
+
 
       const res = await fetch(`${API_URL}/assistant`, {
         method: "POST",
