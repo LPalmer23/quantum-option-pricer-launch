@@ -1,0 +1,571 @@
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    sans-serif;
+  color: #0f172a;
+  background: radial-gradient(circle at top, #0f172a 0, #020617 40%, #000 100%);
+}
+
+body {
+  margin: 0;
+}
+
+.app {
+  min-height: 100vh;
+  padding: 2.5rem 1.5rem 3rem;
+  max-width: 1120px;
+  margin: 0 auto;
+  color: #e5e7eb;
+}
+
+.header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+}
+
+.header p {
+  margin: 0;
+  max-width: 640px;
+  color: #9ca3af;
+}
+
+.layout {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+  gap: 1.75rem;
+}
+
+.card {
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 1rem;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.card h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1rem;
+}
+
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  gap: 0.25rem;
+}
+
+input[type="number"] {
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.5rem;
+  border: 1px solid #4b5563;
+  background: #020617;
+  color: #e5e7eb;
+}
+
+input[type="number"]:focus {
+  outline: 2px solid #38bdf8;
+  outline-offset: 1px;
+}
+
+.checkbox-row {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox-row input {
+  width: 1rem;
+  height: 1rem;
+}
+
+button {
+  grid-column: 1 / -1;
+  margin-top: 0.5rem;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(90deg, #22c55e, #14b8a6);
+  color: #020617;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  box-shadow: 0 12px 25px rgba(34, 197, 94, 0.35);
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: default;
+  box-shadow: none;
+}
+
+button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(34, 197, 94, 0.4);
+}
+
+.error {
+  margin-top: 0.75rem;
+  color: #fecaca;
+  font-size: 0.9rem;
+}
+
+.muted {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.stat {
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
+  background: radial-gradient(circle at top left, #1e293b, #020617);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.stat h3 {
+  margin: 0 0 0.3rem;
+  font-size: 0.9rem;
+  color: #e5e7eb;
+}
+
+.big {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.histogram {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.histogram th,
+.histogram td {
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid rgba(55, 65, 81, 0.7);
+}
+
+.histogram th {
+  text-align: left;
+  color: #9ca3af;
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ==== GALAXY BACKGROUND ==== */
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    sans-serif;
+  color: #e5e7eb;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.4) 0, transparent 55%),
+    radial-gradient(circle at 80% 0%, rgba(168, 85, 247, 0.4) 0, transparent 60%),
+    radial-gradient(circle at 0% 80%, rgba(34, 197, 94, 0.25) 0, transparent 55%),
+    radial-gradient(circle at 80% 80%, rgba(244, 63, 94, 0.2) 0, transparent 55%),
+    #020617;
+  background-attachment: fixed;
+}
+
+/* little star speckles */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255, 255, 255, 0.7) 0, transparent 40%),
+    radial-gradient(1px 1px at 80% 30%, rgba(255, 255, 255, 0.4) 0, transparent 40%),
+    radial-gradient(1px 1px at 50% 80%, rgba(255, 255, 255, 0.6) 0, transparent 40%),
+    radial-gradient(1px 1px at 20% 90%, rgba(255, 255, 255, 0.3) 0, transparent 40%);
+  opacity: 0.8;
+  mix-blend-mode: screen;
+  z-index: -1;
+}
+
+/* Make app-shell float nicely on top of the galaxy */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1.5rem;
+}
+
+/* ==== LENS INTRO OVERLAY ==== */
+
+.lens-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #020617 0, #000 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  animation: lensFadeOut 0.4s ease-out 1.6s forwards;
+}
+
+.lens-circle {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  border-radius: 999px;
+  border: 2px solid rgba(148, 163, 184, 0.9);
+  box-shadow:
+    0 0 40px rgba(129, 140, 248, 0.7),
+    0 0 120px rgba(56, 189, 248, 0.4);
+  background:
+    conic-gradient(
+      from 90deg,
+      rgba(59, 130, 246, 0.5),
+      rgba(236, 72, 153, 0.7),
+      rgba(56, 189, 248, 0.6),
+      rgba(59, 130, 246, 0.5)
+    );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  animation: lensZoom 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.lens-hole {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-radius: 999px;
+  background: #020617;
+  animation: holeOpen 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.lens-text {
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
+
+.lens-logo {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #e5e7eb;
+}
+
+.lens-subtitle {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+/* ==== KEYFRAMES ==== */
+
+@keyframes holeOpen {
+  0% {
+    width: 0;
+    height: 0;
+  }
+  40% {
+    width: 40px;
+    height: 40px;
+  }
+  100% {
+    width: 220vmax;
+    height: 220vmax;
+  }
+}
+
+@keyframes lensZoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(5);
+    opacity: 0;
+  }
+}
+
+@keyframes lensFadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.app-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;   /* centers horizontally */
+  align-items: center;        /* centers vertically */
+  position: relative;
+}
+
+/* ensures content centers once lens animation fades */
+.app-content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.app {
+  max-width: 1200px;         /* centers the two-card layout */
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* === About card tweaks === */
+
+.about-card {
+  margin-top: 2rem;
+}
+
+.about-intro {
+  margin-bottom: 0.6rem;
+}
+
+.about-list {
+  margin: 0.25rem 0 0.75rem;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+  color: #e5e7eb;
+}
+
+.about-list li + li {
+  margin-top: 0.4rem;
+}
+
+.about-footnote {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+/* === Agent chat widget === */
+
+.agent-toggle {
+  position: fixed;
+  right: 1.75rem;
+  bottom: 1.75rem;
+  z-index: 50;
+  border-radius: 999px;
+  padding: 0.7rem 1.2rem;
+  background: linear-gradient(135deg, #22c55e, #14b8a6);
+  color: #020617;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 16px 40px rgba(34, 197, 94, 0.45);
+}
+
+.agent-toggle:hover {
+  transform: translateY(-1px);
+}
+
+.agent-chat-window {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 4.5rem;
+  width: 320px;
+  max-height: 480px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 23, 42, 0.96);
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+  z-index: 49;
+}
+
+.agent-header {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+  font-size: 0.9rem;
+  color: #e5e7eb;
+}
+
+.agent-messages {
+  padding: 0.75rem 0.75rem 0.5rem;
+  flex: 1;
+  overflow-y: auto;
+  font-size: 0.85rem;
+}
+
+.agent-message {
+  max-width: 90%;
+  margin-bottom: 0.4rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.75rem;
+}
+
+.agent-user {
+  margin-left: auto;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.5);
+}
+
+.agent-assistant {
+  margin-right: auto;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+}
+
+.agent-input-row {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.6rem 0.7rem 0.7rem;
+  border-top: 1px solid rgba(31, 41, 55, 0.9);
+}
+
+.agent-input-row input {
+  flex: 1;
+  border-radius: 999px;
+  border: 1px solid #4b5563;
+  background: #020617;
+  color: #e5e7eb;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.85rem;
+}
+
+.agent-input-row input:focus {
+  outline: 2px solid #38bdf8;
+  outline-offset: 1px;
+}
+
+.agent-input-row button {
+  border-radius: 999px;
+  border: none;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #22c55e, #14b8a6);
+  color: #020617;
+  cursor: pointer;
+}
+
+.agent-error {
+  padding: 0 0.75rem 0.4rem;
+  font-size: 0.78rem;
+  color: #fecaca;
+}
+
+@keyframes zyq-bounce-once {
+  0%   { transform: translateY(0); }
+
+  /* BIG JUMP */
+  15%  { transform: translateY(-40px); }
+  30%  { transform: translateY(0); }
+
+  /* MEDIUM JUMP */
+  45%  { transform: translateY(-22px); }
+  60%  { transform: translateY(0); }
+
+  /* SMALL JUMP (finishing bounce) */
+  75%  { transform: translateY(-10px); }
+  90%  { transform: translateY(0); }
+
+  100% { transform: translateY(0); }
+}
+
+.agent-button-bounce-once {
+  animation: zyq-bounce-once 1.2s cubic-bezier(0.25, 0.60, 0.45, 1.4) 1;
+}
+
+
+.js-plotly-plot .modebar {
+  opacity: 1 !important;
+  background: rgba(20, 20, 20, 0.6) !important; /* soft dark backdrop */
+  border-radius: 6px;
+  right: 10px !important;  /* keep it on the right */
+  top: 40px !important;    /* move it DOWN so it doesn’t block your title */
+  transition: opacity 0.2s ease-in-out;
+}
+
+.js-plotly-plot .modebar svg {
+  fill: #eee !important; /* make icons bright and visible */
+}
+
+/* --- Calibration section styles --- */
+
+.calibrate-row {
+  position: relative;
+  gap: 0.4rem;
+}
+
+.calibrate-text {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  position: relative;
+}
+
+.calib-info-icon {
+  color: rgba(240, 240, 255, 0.8); /* subtle white */
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: opacity 0.2s;
+}
+
+.calib-info-icon:hover {
+  opacity: 1;
+}
+
+/* --- Small bubble tooltip --- */
+
+.calib-tooltip {
+  position: absolute;
+  top: -600%;
+  left: 270px;
+  background: rgba(255, 255, 255, 0.14); /* gentle frosted white */
+  backdrop-filter: blur(6px);
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  width: 220px;
+  color: #f8fafc;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  z-index: 50;
+  animation: tooltip-fade 0.15s ease-out;
+}
+
+/* Fade-in animation */
+@keyframes tooltip-fade {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ZyQ Labs – Quantum Option Playground</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #050710;
+      color: #f5f5f5;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      max-width: 900px;
+      width: 100%;
+      background: #111322;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      color: #c0c4ff;
+      margin-bottom: 1.5rem;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: #9ea2c7;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    input {
+      padding: 0.4rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #2c3154;
+      background: #060716;
+      color: #f5f5f5;
+    }
+
+    button {
+      grid-column: 1 / -1;
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      border: none;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff6aa9, #ffb347);
+      color: #111322;
+      margin-top: 0.5rem;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      background: #181a2e;
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid #262b4b;
+    }
+
+    .card h2 {
+      font-size: 1rem;
+      margin: 0 0 0.5rem;
+    }
+
+    .metric {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .small {
+      font-size: 0.85rem;
+      color: #b0b3da;
+    }
+
+    .histogram {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      max-height: 220px;
+      overflow: auto;
+      border-radius: 8px;
+      border: 1px solid #262b4b;
+      padding: 0.75rem;
+      background: #101225;
+    }
+
+    .hist-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .hist-row span:first-child {
+      color: #9ea2c7;
+    }
+
+    .error-text {
+      color: #ff9d9d;
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>ZyQ Labs – Quantum Option Playground</h1>
+    <p class="subtitle">
+      Explore how a quantum random walk prices a European call option,
+      and compare it against the classical Black–Scholes formula.
+    </p>
+
+    <form id="pricing-form">
+      <label>
+        Initial price S₀
+        <input type="number" step="0.01" name="S0" value="100" />
+      </label>
+      <label>
+        Strike K
+        <input type="number" step="0.01" name="K" value="100" />
+      </label>
+      <label>
+        Risk-free rate r
+        <input type="number" step="0.001" name="r" value="0.02" />
+      </label>
+      <label>
+        Volatility σ
+        <input type="number" step="0.01" name="sigma" value="0.2" />
+      </label>
+      <label>
+        Maturity T (years)
+        <input type="number" step="0.1" name="T" value="5" />
+      </label>
+      <label>
+        Steps N
+        <input type="number" step="1" name="N_steps" value="50" />
+      </label>
+
+      <button type="submit">Run quantum walk</button>
+    </form>
+
+    <div id="status" class="small"></div>
+
+    <div class="results" id="results" style="display:none;">
+      <div class="card">
+        <h2>Classical Black–Scholes</h2>
+        <div class="metric" id="bs-call"></div>
+        <div class="small" id="bs-extra"></div>
+      </div>
+
+      <div class="card">
+        <h2>Quantum (raw)</h2>
+        <div class="metric" id="q-raw"></div>
+        <div class="small" id="q-raw-error"></div>
+      </div>
+
+      <div class="card">
+        <h2>Quantum (calibrated)</h2>
+        <div class="metric" id="q-cal"></div>
+        <div class="small" id="q-cal-error"></div>
+      </div>
+    </div>
+
+    <div id="histogram-container" style="display:none;">
+      <h2 style="font-size:1rem; margin-top:1.5rem;">Terminal price distribution (quantum walk)</h2>
+      <div class="histogram" id="histogram"></div>
+    </div>
+
+    <div id="error" class="error-text"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('pricing-form');
+    const statusEl = document.getElementById('status');
+    const errorEl = document.getElementById('error');
+    const resultsEl = document.getElementById('results');
+    const histContainer = document.getElementById('histogram-container');
+    const histEl = document.getElementById('histogram');
+
+    const bsCallEl = document.getElementById('bs-call');
+    const bsExtraEl = document.getElementById('bs-extra');
+    const qRawEl = document.getElementById('q-raw');
+    const qRawErrEl = document.getElementById('q-raw-error');
+    const qCalEl = document.getElementById('q-cal');
+    const qCalErrEl = document.getElementById('q-cal-error');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorEl.textContent = '';
+      statusEl.textContent = 'Running quantum walk on backend...';
+      resultsEl.style.display = 'none';
+      histContainer.style.display = 'none';
+
+      const formData = new FormData(form);
+      const payload = {
+        S0: parseFloat(formData.get('S0')),
+        K: parseFloat(formData.get('K')),
+        r: parseFloat(formData.get('r')),
+        sigma: parseFloat(formData.get('sigma')),
+        T: parseFloat(formData.get('T')),
+        N_steps: parseInt(formData.get('N_steps')),
+        calibrate: true,
+        shots: 4096,
+      };
+
+      try {
+        const res = await fetch('http://127.0.0.1:8000/price', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          throw new Error('API error: ' + res.status);
+        }
+
+        const data = await res.json();
+
+        const bs = data.outputs.bs_call;
+        const qRaw = data.outputs.q_call_raw;
+        const qCal = data.outputs.q_call_calibrated;
+        const errors = data.errors;
+        const hist = data.histogram;
+        const mp = data.model_params;
+
+        bsCallEl.textContent = bs.toFixed(4);
+        bsExtraEl.textContent = `dt = ${mp.dt.toFixed(4)}, steps = ${payload.N_steps}, qubits = ${mp.n_p}, p_up = ${mp.p_up.toFixed(4)}`;
+
+        qRawEl.textContent = qRaw.toFixed(4);
+        qRawErrEl.textContent = `abs error = ${errors.raw.abs.toFixed(4)}, rel error = ${(errors.raw.rel * 100).toFixed(2)}%`;
+
+        qCalEl.textContent = qCal.toFixed(4);
+        qCalErrEl.textContent = `abs error = ${errors.calibrated.abs.toFixed(4)}, rel error = ${(errors.calibrated.rel * 100).toFixed(2)}%`;
+
+        // simple text-based histogram
+        histEl.innerHTML = '';
+        hist.slice(0, 40).forEach(row => {
+          const div = document.createElement('div');
+          div.className = 'hist-row';
+          div.innerHTML = `
+            <span>S ≈ ${row.S.toFixed(2)}</span>
+            <span>p ≈ ${row.prob.toFixed(4)}</span>
+          `;
+          histEl.appendChild(div);
+        });
+
+        resultsEl.style.display = 'grid';
+        histContainer.style.display = 'block';
+        statusEl.textContent = 'Done ✨';
+      } catch (err) {
+        console.error(err);
+        errorEl.textContent = 'Something went wrong: ' + err.message;
+        statusEl.textContent = '';
+      }
+    });
+  </script>
+</body>
+</html>
