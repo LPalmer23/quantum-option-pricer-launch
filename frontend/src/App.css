@@ -569,3 +569,19 @@ body::before {
   from { opacity: 0; transform: translateY(-3px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+.app {
+  min-height: 100vh;
+  width: 100%;            /* make sure it never exceeds the viewport width */
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 3rem;
+  color: #e5e7eb;
+}
+
+@media (max-width: 600px) {
+  .app {
+    padding: 1.75rem 1rem 2.5rem;
+  }
+}
+

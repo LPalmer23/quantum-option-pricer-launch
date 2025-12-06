@@ -66,3 +66,42 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Reset & box sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Page background + base layout */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  width: 100%;
+}
+
+/* Main background gradient lives on <body> */
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    sans-serif;
+  background: radial-gradient(circle at top, #0f172a 0, #020617 40%, #000 100%);
+  color: #e5e7eb;
+}
+
+/* Ensure the React root stretches full width */
+#root {
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* iOS Safari quirk fix for backgrounds */
+@supports (-webkit-touch-callout: none) {
+  body {
+    background-attachment: scroll;
+    background-size: cover;
+  }
+}
+
