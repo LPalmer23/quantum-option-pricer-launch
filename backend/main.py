@@ -10,7 +10,7 @@ from quantum_engine import run_quantum_pricing  # your quantum code wrapper
 from openai import OpenAI
 import os
 
-client = OpenAI()  # uses OPENAI_API_KEY from your environment
+client = OpenAI(api_key=os.getenv("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")) 
 
 
 PROJECT_CONTEXT = """
