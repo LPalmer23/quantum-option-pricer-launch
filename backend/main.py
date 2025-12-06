@@ -10,7 +10,13 @@ from quantum_engine import run_quantum_pricing  # your quantum code wrapper
 from openai import OpenAI
 import os
 
-client = OpenAI(api_key=os.getenv("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")) 
+api_key = os.getenv("OPENAI_API_KEY")
+
+if not api_key:
+    # This helps you see clearly in the Render logs if the env var is missing
+    raise RuntimeError("OPENAI_API_KEY environment variable is not set")
+
+client = OpenAI(api_key=api_key)
 
 
 PROJECT_CONTEXT = """
@@ -80,7 +86,9 @@ app = FastAPI(
 origins = [
     "http://127.0.0.1:5173",
     "http://localhost:5173",
+    "https://zyq-quantum-option-pricer.vercel.app",
 ]
+
 
 app.add_middleware(
     CORSMiddleware,
