@@ -99,7 +99,9 @@ function App() {
         shots: Number(shots),
       };
 
-      const res = await fetch("http://127.0.0.1:8000/price", {
+      const API_URL = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
+
+      const res = await fetch(`${API_URL}/price`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
